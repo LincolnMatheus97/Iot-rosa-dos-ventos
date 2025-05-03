@@ -14,7 +14,7 @@
 int main()
 {
     stdio_init_all();           // Inicializa a comunicação serial
-    inicializar_botoes();       // Inicializa os sensores (botões)
+    inicializar_adc();          // Inicializa os sensores (adc(1) e adc(2)) para leitura do joystick
 
     // Inicializa o Wi-Fi e verifica o erro
     while (cyw43_arch_init())
