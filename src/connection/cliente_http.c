@@ -37,7 +37,7 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
 
     char corpo_json[128];
     snprintf(corpo_json, sizeof(corpo_json),
-             "{\"direcao\": %s, \"x\": %d, \"y\": %d}",
+             "{\"direcao\": \"%s\", \"x\": %d, \"y\": %d}",
              direcao, x, y);
 
     char requisicao[512];
