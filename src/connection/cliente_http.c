@@ -31,12 +31,14 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     tcp_recv(pcb, callback_resposta_recebida);
 
     // Coletar dados
+    uint8_t x = leitura_joystick_x();
+    uint8_t y = leitura_joystick_y();
     const char* direcao = verificar_movimento();
 
     char corpo_json[128];
     snprintf(corpo_json, sizeof(corpo_json),
-             "{\"direcao\": \"%s\"}",
-             direcao);
+             "{\"direcao\": %s, \"x\": %d, \"y\": %d}",
+             direcao, x, y);
 
     char requisicao[512];
     // Usar PROXY_HOST no cabeçalho Host
