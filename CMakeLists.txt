@@ -36,7 +36,8 @@ pico_sdk_init()
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(iot_rosa_dos_ventos 
-        src/iot_rosa_dos_ventos.c )
+        src/iot_rosa_dos_ventos.c
+        src/utils/joystick.c)
 
 pico_set_program_name(iot_rosa_dos_ventos "iot_rosa_dos_ventos")
 pico_set_program_version(iot_rosa_dos_ventos "0.1")
@@ -47,18 +48,29 @@ pico_enable_stdio_usb(iot_rosa_dos_ventos 1)
 
 # Add the standard library to the build
 target_link_libraries(iot_rosa_dos_ventos
-        pico_stdlib)
+        pico_stdlib
+        hardware_adc
+        hardware_gpio
+        pico_cyw43_arch_lwip_threadsafe_background
+        )
 
 # Add the standard include files to the build
 target_include_directories(iot_rosa_dos_ventos PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/src
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils
+        ${CMAKE_CURRENT_LIST_DIR}/src/connection
+        ${PICO_SDK_PATH}/lib/lwip/src/include
+        ${PICO_SDK_PATH}/lib/lwip/src/include/arch
+        ${PICO_SDK_PATH}/lib/lwip/src/include/lwip
+)
+
+target_sources(iot_rosa_dos_ventos PRIVATE
+    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/httpd.c
+    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/fs.c
 )
 
 # Add any user requested libraries
-target_link_libraries(iot_rosa_dos_ventos 
-        pico_cyw43_arch_lwip_threadsafe_background
-        )
 
 pico_add_extra_outputs(iot_rosa_dos_ventos)
 
