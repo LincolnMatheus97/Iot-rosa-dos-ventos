@@ -37,7 +37,8 @@ pico_sdk_init()
 
 add_executable(iot_rosa_dos_ventos 
         src/iot_rosa_dos_ventos.c
-        src/utils/joystick.c)
+        src/utils/joystick.c
+        src/connection/cliente_http.c)
 
 pico_set_program_name(iot_rosa_dos_ventos "iot_rosa_dos_ventos")
 pico_set_program_version(iot_rosa_dos_ventos "0.1")
