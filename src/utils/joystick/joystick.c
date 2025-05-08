@@ -26,25 +26,25 @@ const char* verificar_movimento()
 
     static const char* direcoes[3][3] =
     {
-        {"Noroeste", "Norte", "Nordeste"},
-        {"Oeste", "Centro", "Leste"},
-        {"Sudoeste", "Sul", "Sudeste"},
+        {"Sudoeste", "Oeste", "Noroeste"},
+        {"Sul", "Centro", "Norte"},
+        {"Sudeste", "Leste", "Nordeste"},
     };
 
     int indice_x;
     if (x < JOYSTICK_LIMITE_INFERIOR) {
-        indice_x = 2; // Oeste
+        indice_x = 0; // Oeste
     } else if (x > JOYSTICK_LIMITE_SUPERIOR) {
-        indice_x = 0; // Leste
+        indice_x = 2; // Leste
     } else {
         indice_x = 1; // Centro
     }
 
     int indice_y;
     if (y < JOYSTICK_LIMITE_INFERIOR) {
-        indice_y = 2; // Sul
+        indice_y = 0; // Sul
     } else if (y > JOYSTICK_LIMITE_SUPERIOR) {
-        indice_y = 0; // Norte
+        indice_y = 2; // Norte
     } else {
         indice_y = 1; // Centro
     }
