@@ -7,8 +7,8 @@
 #include "utils/joystick.h"
 #include "connection/cliente_http.h"
 
-#define NOME_REDE_WIFI "SBG_Ext"
-#define SENHA_REDE_WIFI "SBG272417"
+#define NOME_REDE_WIFI "Larissa Lima"
+#define SENHA_REDE_WIFI "larissalima33840"
 
 // --- Função Principal (início do programa) ---
 int main()
