@@ -8,7 +8,7 @@
 #include "lwip/dns.h"
 #include "lwip/ip_addr.h"
 #include "lwip/tcp.h"
-#include "src/utils/joystick.h"
+#include "src/utils/joystick/joystick.h"
 
 #define PROXY_HOST "maglev.proxy.rlwy.net"
 #define PROXY_PORT 48443

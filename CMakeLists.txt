@@ -38,6 +38,7 @@ pico_sdk_init()
 add_executable(iot_rosa_dos_ventos 
         src/iot_rosa_dos_ventos.c
         src/utils/joystick/joystick.c
+        src/utils/displayOLED/displayOLED.c
         src/connection/cliente_http.c
         inc/ssd1306/ssd1306.c)
 
@@ -63,6 +64,7 @@ target_include_directories(iot_rosa_dos_ventos PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}/src/utils
         ${CMAKE_CURRENT_LIST_DIR}/src/utils/joystick
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/displayOLED
         ${CMAKE_CURRENT_LIST_DIR}/src/connection
         ${CMAKE_CURRENT_LIST_DIR}/inc
         ${CMAKE_CURRENT_LIST_DIR}/inc/ssd1306
