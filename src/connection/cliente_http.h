@@ -8,11 +8,15 @@
 #include "lwip/dns.h"
 #include "lwip/ip_addr.h"
 #include "lwip/tcp.h"
-#include "src/utils/joystick/joystick.h"
 
 #define PROXY_HOST "maglev.proxy.rlwy.net"
 #define PROXY_PORT 48443
 
-void enviar_dados_para_nuvem();
+typedef struct{
+    char direcao[20];
+    int joy_x, joy_y;
+} StatusJoystick;
+
+void enviar_dados_para_nuvem(const StatusJoystick* dados_a_enviar);
 
 #endif
