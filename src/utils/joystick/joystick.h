@@ -2,6 +2,7 @@
 #define JOYSTICK_H
 
 #include <stdio.h>
+#include <string.h>
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 
