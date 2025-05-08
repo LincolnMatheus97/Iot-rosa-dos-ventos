@@ -1,5 +1,12 @@
 #include "cliente_http.h"
 
+/**
+ * @brief Callback para receber a resposta do servidor.
+ * @param pcb PCB da conexão TCP.
+ * @param p Buffer de dados recebidos.
+ * @param err Código de erro.
+ * @return ERR_OK se tudo ocorrer bem, ou um código de erro.
+ */
 static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err) {
     
     if (!p) {
@@ -21,6 +28,15 @@ static err_t callback_resposta_recebida(void *arg, struct tcp_pcb *pcb, struct p
     return ERR_OK;
 }
 
+/**
+ * @brief Callback para quando a conexão TCP é estabelecida.
+ * @param arg Argumento passado para o callback (StatusJoystick*).
+ * @param pcb PCB da conexão TCP.
+ * @param err Código de erro.
+ * @note É aqui que a requisição HTTP é enviada, após a conexão ser estabelecida.
+ *      Tem que usar o PROXY_HOST no cabeçalho Host. 
+ * @return ERR_OK se tudo ocorrer bem, ou um código de erro.
+ */
 static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
 
     StatusJoystick* dados_recebidos = (StatusJoystick*)arg;
@@ -39,7 +55,6 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
              dados_recebidos->direcao, dados_recebidos->joy_x, dados_recebidos->joy_y);
 
     char requisicao[512];
-    // Usar PROXY_HOST no cabeçalho Host
     snprintf(requisicao, sizeof(requisicao),
              "POST /dados HTTP/1.1\r\n"
              "Host: %s\r\n"
@@ -64,6 +79,14 @@ static err_t callback_conectado(void *arg, struct tcp_pcb *pcb, err_t err) {
     return ERR_OK;
 }
 
+/**
+ * @brief Callback para quando a resolução DNS é concluída.
+ * @param nome_host Nome do host que foi resolvido.
+ * @param ip_resolvido Endereço IP resolvido.
+ * @param arg Argumento passado para o callback (StatusJoystick*).
+ * @note Se a resolução falhar, imprime uma mensagem de erro. Em caso de sucesso,
+ *       ele segue para tentar a conexão TCP.
+ */
 static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_resolvido, void *arg) {
     
     StatusJoystick* dados_recebidos = (StatusJoystick*)arg;
@@ -91,6 +114,11 @@ static void callback_dns_resolvido(const char *nome_host, const ip_addr_t *ip_re
     }
 }
 
+/**
+ * @brief Envia os dados do joystick para o servidor na nuvem.
+ * @param dados_a_enviar Ponteiro para a estrutura StatusJoystick com os dados a enviar.
+ * @note Usar PROXY_HOST para resolução DNS. Assim que o DNS for resolvido, a conexão TCP é estabelecida e os dados são enviados.
+ */
 void enviar_dados_para_nuvem(const StatusJoystick* dados_a_enviar) {
     ip_addr_t endereco_ip;
     // Usar PROXY_HOST para resolução DNS
