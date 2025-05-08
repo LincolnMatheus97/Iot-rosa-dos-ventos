@@ -33,14 +33,23 @@ project(iot_rosa_dos_ventos C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# set main code path
+file(GLOB_RECURSE MAIN "src/iot_rosa_dos_ventos.c")
+# set path to utility files
+file(GLOB_RECURSE UTILS "src/utils/**/*.c")
+# set path to includes
+file(GLOB_RECURSE INC "inc/ssd1306/*.c")
+# set path to connection files
+file(GLOB_RECURSE CONNECTION_FILES "src/connection/*.c")
+
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(iot_rosa_dos_ventos 
-        src/iot_rosa_dos_ventos.c
-        src/utils/joystick/joystick.c
-        src/utils/displayOLED/displayOLED.c
-        src/connection/cliente_http.c
-        inc/ssd1306/ssd1306.c)
+        ${MAIN}
+        ${UTILS}
+        ${INC}
+        ${CONNECTION_FILES}
+)
 
 pico_set_program_name(iot_rosa_dos_ventos "iot_rosa_dos_ventos")
 pico_set_program_version(iot_rosa_dos_ventos "0.1")
@@ -65,20 +74,12 @@ target_include_directories(iot_rosa_dos_ventos PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/utils
         ${CMAKE_CURRENT_LIST_DIR}/src/utils/joystick
         ${CMAKE_CURRENT_LIST_DIR}/src/utils/displayOLED
+        ${CMAKE_CURRENT_LIST_DIR}/src/utils/wifi
         ${CMAKE_CURRENT_LIST_DIR}/src/connection
         ${CMAKE_CURRENT_LIST_DIR}/inc
         ${CMAKE_CURRENT_LIST_DIR}/inc/ssd1306
-        ${PICO_SDK_PATH}/lib/lwip/src/include
-        ${PICO_SDK_PATH}/lib/lwip/src/include/arch
-        ${PICO_SDK_PATH}/lib/lwip/src/include/lwip
-)
-
-target_sources(iot_rosa_dos_ventos PRIVATE
-    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/httpd.c
-    ${PICO_SDK_PATH}/lib/lwip/src/apps/http/fs.c
 )
 
 # Add any user requested libraries
 
 pico_add_extra_outputs(iot_rosa_dos_ventos)
-
