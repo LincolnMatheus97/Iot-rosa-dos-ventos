@@ -1,51 +1,125 @@
 #include <stdio.h>
 #include "pico/stdlib.h"
-#include "pico/cyw43_arch.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "utils/joystick.h"
-#include "connection/cliente_http.h"
 
-#define NOME_REDE_WIFI "Larissa Lima"
-#define SENHA_REDE_WIFI "larissalima33840"
+#include "joystick.h"
+#include "cliente_http.h"
+#include "wifi.h"
+#include "displayOLED.h"
 
-// --- Função Principal (início do programa) ---
+typedef struct{
+    char direcao[20];
+    int joy_x, joy_y;
+} StatusJoystick;
+
+char direcao_anterior[20] = "";
+int joy_x_anterior = -1; 
+int joy_y_anterior = -1;
+
+StatusJoystick *status_joy = NULL;
+
+int iniciar_conexao() 
+{
+
+    limpar_display();
+    escrever_display("Conectando em:", 23, 20, 1);
+    escrever_display(NOME_REDE_WIFI, 23, 32, 1);
+    mostrar_display();
+
+    int status_conexao = conexao_wifi();
+
+    limpar_display();
+    if (status_conexao == 0) {
+        escrever_display("CONEXAO ESTABECIDA", 10, 30, 1);
+        printf("IP do dispositivo: %s\n", ipaddr_ntoa(&netif_default->ip_addr));
+    } else {
+        escrever_display("FALHA NA CONEXAO", 10, 30, 1);
+    }
+    mostrar_display();
+    sleep_ms(3000);
+
+    return status_conexao;
+}
+
+void atualizar_status_no_display(int valor_x, int valor_y, const char* direcao)
+{
+    limpar_display();
+
+    escrever_display("Status Joystick", 22, 0, 1);
+
+    char dados_joystick[40];
+    snprintf(dados_joystick, sizeof(dados_joystick), "X:%d Y:%d - %s", valor_x, valor_y, direcao);
+    escrever_display(dados_joystick, 5, 32, 1);
+
+    mostrar_display();
+}
+
+void iniciar_perifericos()
+{
+    stdio_init_all();
+    inicializar_adc();
+    inic_barr_i2c();
+    inic_display();
+
+
+    status_joy = (StatusJoystick*)malloc(sizeof(StatusJoystick));
+    status_joy->joy_x = 0;
+    status_joy->joy_y = 0;
+    strcpy(status_joy->direcao, "Centro");
+}
+
 int main()
 {
-    stdio_init_all();           // Inicializa a comunicação serial
-    inicializar_adc();          // Inicializa os sensores (adc(1) e adc(2)) para leitura do joystick
+    iniciar_perifericos();
+    sleep_ms(1500);
 
-    // Inicializa o Wi-Fi e verifica o erro
-    while (cyw43_arch_init())
-    {
-        printf("Falha ao inicializar Wi-Fi\n");
-        sleep_ms(100);
-        return -1;
-    }
+    iniciar_conexao();
 
-    cyw43_arch_enable_sta_mode();
-
-    printf("Conectando ao Wi-Fi '%s'...\n", NOME_REDE_WIFI);
-    // Conecta ao Wi-Fi e verifica o erro
-    while (cyw43_arch_wifi_connect_timeout_ms(NOME_REDE_WIFI, SENHA_REDE_WIFI, CYW43_AUTH_WPA2_AES_PSK, 20000))
-    {
-        printf("Falha ao conectar ao Wi-Fi...Tentando novamente...\n");
-        sleep_ms(5000);
-    }
-    printf("Conectado ao Wi-Fi\n");
     
-    // Verifica o endereço IP do dispositivo
-    if (netif_default)
-    {
-        printf("IP do dispositivo: %s\n", ipaddr_ntoa(&netif_default->ip_addr));
-    }
+    strcpy(direcao_anterior, verificar_movimento());
+    joy_x_anterior = leitura_joystick_x();
+    joy_y_anterior = leitura_joystick_y();
+    
+    atualizar_status_no_display(joy_x_anterior, joy_y_anterior, direcao_anterior);
+    
+    enviar_dados_para_nuvem();
 
     while (true)
     {
         cyw43_arch_poll();
-        enviar_dados_para_nuvem();
-        sleep_ms(1000);
+
+        
+        const char* direcao_atual_const = verificar_movimento();
+        int joy_x_atual = leitura_joystick_x();
+        int joy_y_atual = leitura_joystick_y();
+
+        
+        if (strcmp(direcao_anterior, direcao_atual_const) != 0 ||
+            joy_x_anterior != joy_x_atual ||
+            joy_y_anterior != joy_y_atual)
+        {
+            
+            strcpy(status_joy->direcao, direcao_atual_const);
+            status_joy->joy_x = joy_x_atual;
+            status_joy->joy_y = joy_y_atual;
+
+            
+            atualizar_status_no_display(status_joy->joy_x, status_joy->joy_y, status_joy->direcao);
+
+            
+            enviar_dados_para_nuvem();
+
+            // Atualiza os valores anteriores para a próxima comparação
+            strcpy(direcao_anterior, status_joy->direcao);
+            joy_x_anterior = status_joy->joy_x;
+            joy_y_anterior = status_joy->joy_y;
+        }
+        
+        atualizar_status_no_display(joy_x_atual, joy_y_atual, direcao_atual_const);
+
+        sleep_ms(100); 
     }
 
     cyw43_arch_deinit();
