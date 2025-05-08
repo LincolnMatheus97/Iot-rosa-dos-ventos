@@ -3,6 +3,8 @@
 
 int conexao_wifi() {
 
+    int conexao;
+
     while (cyw43_arch_init())
     {
         printf("Falha ao inicializar Wi-Fi\n");
@@ -14,7 +16,9 @@ int conexao_wifi() {
 
     printf("Conectando ao Wi-Fi '%s'...\n", NOME_REDE_WIFI);
     
-    int conexao = cyw43_arch_wifi_connect_timeout_ms(NOME_REDE_WIFI, SEEK_SET, CYW43_AUTH_WPA2_AES_PSK, 10000);
+    conexao = cyw43_arch_wifi_connect_timeout_ms(NOME_REDE_WIFI, SENHA_REDE_WIFI, CYW43_AUTH_WPA2_AES_PSK, 10000);
 
+    char *menssagem = (conexao == 0) ? "Wifi Conectado...\n" : "Falha ao Conectar...\n";
+    printf(menssagem);
     return conexao;
 }
