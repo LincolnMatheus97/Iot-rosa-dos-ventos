@@ -24,40 +24,30 @@ const char* verificar_movimento()
     uint8_t x = leitura_joystick_x();
     uint8_t y = leitura_joystick_y();
 
-    if (x > JOYSTICK_LIMITE_SUPERIOR && y > JOYSTICK_LIMITE_SUPERIOR)
+    static const char* direcoes[3][3] =
     {
-        return "Nordeste";
-    } 
-    else if (x > JOYSTICK_LIMITE_SUPERIOR && y < JOYSTICK_LIMITE_INFERIOR)
-    {
-        return "Sudeste";
+        {"Noroeste", "Norte", "Nordeste"},
+        {"Oeste", "Centro", "Leste"},
+        {"Sudoeste", "Sul", "Sudeste"},
+    };
+
+    int indice_x;
+    if (x < JOYSTICK_LIMITE_INFERIOR) {
+        indice_x = 2; // Oeste
+    } else if (x > JOYSTICK_LIMITE_SUPERIOR) {
+        indice_x = 0; // Leste
+    } else {
+        indice_x = 1; // Centro
     }
-    else if (x < JOYSTICK_LIMITE_INFERIOR && y > JOYSTICK_LIMITE_SUPERIOR)
-    {
-        return "Noroeste";
+
+    int indice_y;
+    if (y < JOYSTICK_LIMITE_INFERIOR) {
+        indice_y = 2; // Sul
+    } else if (y > JOYSTICK_LIMITE_SUPERIOR) {
+        indice_y = 0; // Norte
+    } else {
+        indice_y = 1; // Centro
     }
-    else if (x < JOYSTICK_LIMITE_INFERIOR && y < JOYSTICK_LIMITE_INFERIOR)
-    {
-        return "Sudoeste";
-    }
-    else if (x > JOYSTICK_LIMITE_SUPERIOR)
-    {
-        return "Leste";
-    }
-    else if (x < JOYSTICK_LIMITE_INFERIOR)
-    {
-        return "Oeste";
-    }
-    else if (y > JOYSTICK_LIMITE_SUPERIOR)
-    {
-        return "Norte";
-    }
-    else if (y < JOYSTICK_LIMITE_INFERIOR)
-    {
-        return "Sul";
-    }
-    else
-    {
-        return "Centro";
-    }
+
+    return direcoes[indice_x][indice_y];
 }
