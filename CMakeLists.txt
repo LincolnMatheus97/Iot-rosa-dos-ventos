@@ -38,7 +38,8 @@ pico_sdk_init()
 add_executable(iot_rosa_dos_ventos 
         src/iot_rosa_dos_ventos.c
         src/utils/joystick.c
-        src/connection/cliente_http.c)
+        src/connection/cliente_http.c
+        inc/ssd1306/ssd1306.c)
 
 pico_set_program_name(iot_rosa_dos_ventos "iot_rosa_dos_ventos")
 pico_set_program_version(iot_rosa_dos_ventos "0.1")
@@ -52,6 +53,7 @@ target_link_libraries(iot_rosa_dos_ventos
         pico_stdlib
         hardware_adc
         hardware_gpio
+        hardware_i2c
         pico_cyw43_arch_lwip_threadsafe_background
         )
 
@@ -61,6 +63,8 @@ target_include_directories(iot_rosa_dos_ventos PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}/src/utils
         ${CMAKE_CURRENT_LIST_DIR}/src/connection
+        ${CMAKE_CURRENT_LIST_DIR}/inc
+        ${CMAKE_CURRENT_LIST_DIR}/inc/ssd1306
         ${PICO_SDK_PATH}/lib/lwip/src/include
         ${PICO_SDK_PATH}/lib/lwip/src/include/arch
         ${PICO_SDK_PATH}/lib/lwip/src/include/lwip
