@@ -1,6 +1,7 @@
 #ifndef CLIENTE_HTTP_H
 #define CLIENTE_HTTP_H
 
+// -- INCLUDES --
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,10 +10,12 @@
 #include "lwip/ip_addr.h"
 #include "lwip/tcp.h"
 
-#define PROXY_HOST "maglev.proxy.rlwy.net"
-#define PROXY_PORT 48443
+// -- DEFINES --
+#define PROXY_HOST "maglev.proxy.rlwy.net"      
+#define PROXY_PORT 48443                        
 
-typedef struct{
+// Estrutura para armazenar os dados do joystick
+typedef struct{ 
     char direcao[20];
     int joy_x, joy_y;
 } StatusJoystick;
