@@ -1,5 +1,5 @@
 #include "displayOLED.h"
-#include "inc/ssd1306/ssd1306.h"
+#include "ssd1306.h"
 
 // Instância do display
 ssd1306_t display; 

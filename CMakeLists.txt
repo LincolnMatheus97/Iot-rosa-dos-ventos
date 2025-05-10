@@ -38,7 +38,7 @@ file(GLOB_RECURSE MAIN "src/iot_rosa_dos_ventos.c")
 # set path to utility files
 file(GLOB_RECURSE UTILS "src/utils/**/*.c")
 # set path to includes
-file(GLOB_RECURSE INC "inc/ssd1306/*.c")
+file(GLOB_RECURSE LIB "lib/ssd1306/*.c")
 # set path to connection files
 file(GLOB_RECURSE CONNECTION_FILES "src/connection/*.c")
 
@@ -47,7 +47,7 @@ file(GLOB_RECURSE CONNECTION_FILES "src/connection/*.c")
 add_executable(iot_rosa_dos_ventos 
         ${MAIN}
         ${UTILS}
-        ${INC}
+        ${LIB}
         ${CONNECTION_FILES}
 )
 
@@ -76,8 +76,8 @@ target_include_directories(iot_rosa_dos_ventos PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/src/utils/displayOLED
         ${CMAKE_CURRENT_LIST_DIR}/src/utils/wifi
         ${CMAKE_CURRENT_LIST_DIR}/src/connection
-        ${CMAKE_CURRENT_LIST_DIR}/inc
-        ${CMAKE_CURRENT_LIST_DIR}/inc/ssd1306
+        ${CMAKE_CURRENT_LIST_DIR}/lib
+        ${CMAKE_CURRENT_LIST_DIR}/lib/ssd1306
 )
 
 # Add any user requested libraries
