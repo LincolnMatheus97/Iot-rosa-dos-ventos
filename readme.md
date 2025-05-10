@@ -119,8 +119,3 @@ Este projeto usa o **Pico SDK versão 1.5.1** e deve ser importado corretamente 
    - Copie o arquivo `.uf2` para dentro da unidade
 
 ---
-
-## 👨‍💻 Autor.
-
-* Lincoln Matheus Costa Campelo Pinho
-* [Meu Perfil no GitHub!](https://github.com/LincolnMatheus97)
